@@ -42,3 +42,25 @@ def correr_simulacion(interval, num_procesos, memory_capacity, cpu_speed, cpu_co
     env.process(generar_procesos(env, interval, num_procesos, ram, cpu, resultados))
     env.run()
     return np.mean(resultados), np.std(resultados)
+def main():
+    random.seed(RANDOM_SEED)  # Para mantener consistencia 
+    for memory in MEMORY_CAPACITY:
+        for cpu_speed in CPU_SPEEDS:
+            for cpu_count in CPU_COUNTS:
+                plt.figure()
+                for interval in INTERVALS:
+                    tiempos = []
+                    for num_procesos in PROCESS_COUNTS:
+                        promedio, _ = correr_simulacion(interval, num_procesos, memory, cpu_speed, cpu_count)
+                        tiempos.append(promedio)
+                    
+                    plt.plot(PROCESS_COUNTS, tiempos, marker='o', label=f'Intervalo {interval}')
+                
+                plt.xlabel('Número de procesos')
+                plt.ylabel('Tiempo promedio en el sistema')
+                plt.title(f'Memoria: {memory}, CPU Velocidad: {cpu_speed}, CPUs: {cpu_count}')
+                plt.legend()
+                plt.show()
+
+if _name_ == '_main_':
+    main()
